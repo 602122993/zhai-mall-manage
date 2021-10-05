@@ -59,7 +59,7 @@ const actions = {
         const { roleIdList, name, avatar, introduction } = data
 
         // roles must be a non-empty array
-        commit('SET_ROLES', roleIdList)
+        commit('SET_ROLES', [roleIdList])
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
