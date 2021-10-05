@@ -186,6 +186,12 @@ export const asyncRoutes = [
         name: 'role-permission',
         meta: { title: '编辑权限', icon: 'icon', noCache: true },
         hidden: true
+      },  {
+        path: 'role-menu',
+        component: () => import('@/views/admin/roleMenu'),
+        name: 'role-menu',
+        meta: { title: '编辑菜单', icon: 'icon', noCache: true },
+        hidden: true
       }
     ]
   },

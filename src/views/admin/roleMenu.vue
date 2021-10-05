@@ -2,17 +2,17 @@
   <div>
     <div class="menu-tree">
       <el-tree
-        :data="permissionTree"
+        :data="menuTree"
         show-checkbox
         ref="tree"
         node-key="id"
-        :default-checked-keys="permissionIdList"
+        :default-checked-keys="menuIdList"
         :props="defaultProps"
       >
       </el-tree>
     </div>
     <div class="menu-tree">
-      <el-button type="primary" @click="submitRolePermission">确定</el-button>
+      <el-button type="primary" @click="submitRoleMenu">确定</el-button>
       <el-button @click="cancel">取消</el-button>
     </div>
   </div>
@@ -27,35 +27,32 @@ import {
 export default {
   data() {
     return {
-      permissionTree: [],
-      permissionIdList: [],
+      menuTree: [],
+      menuIdList: [],
       defaultProps: {
-        children: "permissionEntityList",
+        children: "childList",
         label: "name",
       },
     };
   },
   methods: {
     initTree() {
-      queryPermissionTree().then((resp) => {
+      queryMenuTree().then((resp) => {
         const { data } = resp;
-        data.forEach(element => {
-            element.id = 'category'+element.id
-        });
-        this.permissionTree = data;
+        this.menuTree = data;
       });
-      queryPermissionIdByRoleId(this.$route.query.roleId).then(resp=>{
-         this.permissionIdList=resp.data
+      queryMenuIdByRoleId(this.$route.query.roleId).then(resp=>{
+         this.menuIdList=resp.data
       })
     },
-    submitRolePermission() {
-      let permissionIdList = this.$refs.tree
+    submitRoleMenu() {
+      let menuIdList = this.$refs.tree
         .getCheckedNodes(true, false)
         .map((item) => {
           return item.id;
         });
       let roleId = this.$route.query.roleId;
-      saveRolePermission({ permissionIdList, roleId }).then((resp) => {
+      saveRoleMenu({ menuIdList, roleId }).then((resp) => {
         this.$message({
           showClose: true,
           message: "保存成功",
