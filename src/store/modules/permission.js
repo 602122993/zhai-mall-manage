@@ -11,7 +11,15 @@ import {
  * @param route
  */
 function hasPermission(menuList, route) {
-    return menuList.some(role => route.path===role.uri)
+    return menuList.some(role => {
+        if(route.path===role.uri){
+          route.meta.title = role.name
+          route.meta.icon = role.icon
+          return true
+        }
+        return false
+      
+    })
 }
 
 

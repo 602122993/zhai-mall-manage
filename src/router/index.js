@@ -180,6 +180,12 @@ export const asyncRoutes = [
         component: () => import('@/views/admin/roleList'),
         name: 'role',
         meta: { title: '角色管理', icon: 'icon', noCache: true }
+      }, 
+      {
+        path: 'menu-list',
+        component: () => import('@/views/admin/menuList'),
+        name: 'role',
+        meta: { title: '菜单管理', icon: 'icon', noCache: true }
       },  {
         path: 'role-permission',
         component: () => import('@/views/admin/rolePermission'),
@@ -195,6 +201,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,
