@@ -108,6 +108,7 @@ import {
   queryPermissionCategoryList,
   savePermission,
   updatePermisson,
+  removePermission,
 } from "@/api/permission";
 export default {
   data() {
@@ -139,6 +140,15 @@ export default {
         }
       );
     },
+    handlerConfirm(id){
+        removePermission(id).then(resp=>{
+            this.$message({
+                message:'删除成功',
+                type:'success'
+            })
+            then
+        })
+    },  
     showCreate() {
       this.permissionForm = {};
 
