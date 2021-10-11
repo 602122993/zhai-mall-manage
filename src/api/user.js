@@ -23,3 +23,51 @@ export function logout(token) {
     param :token
   })
 }
+
+export function queryAdminList(param){
+  return request({
+    url:`/auth/admin/list`,
+    method:'get',
+    params: param
+  })
+}
+
+export function saveAdmin(data){
+  return request({
+    url:`/auth/admin/save`,
+    method:'post',
+    data
+  })
+}
+
+export function distributionAdminRole(data){
+  return request({
+    url:`/auth/admin/description-role`,
+    method:'post',
+    data
+  })
+}
+
+export function changePassword(data){
+  return request({
+    url:`/auth/admin/change-admin-password`,
+    method:'post',
+    data
+  })
+}
+
+export function removeAdmin(id){
+  return request({
+    url:`/auth/admin/remove`,
+    method:'post',
+    params:{id}
+  })
+}
+
+export function updateAdmin(data){
+  return request({
+    url: `/auth/admin/update`,
+    method:'post',
+    data
+  })
+}

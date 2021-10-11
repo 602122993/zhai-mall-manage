@@ -15,6 +15,7 @@ function hasPermission(menuList, route) {
         if(route.path===role.uri){
           route.meta.title = role.name
           route.meta.icon = role.icon
+          route.hidden=false
           return true
         }
         return false
@@ -69,7 +70,7 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes= filterAsyncRoutes(asyncRoutes, menuList)
       commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      resolve(asyncRoutes)
     })
   }
 }

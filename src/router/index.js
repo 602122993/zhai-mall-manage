@@ -198,6 +198,25 @@ export const asyncRoutes = [
         name: 'role-menu',
         meta: { title: '编辑菜单', icon: 'icon', noCache: true },
         hidden: true
+      },  {
+        path: 'admin',
+        component: () => import('@/views/admin/adminList'),
+        name: 'admin',
+        meta: {  icon: 'icon', noCache: true },
+        
+      }
+      ,  {
+        path: 'permission',
+        component: () => import('@/views/admin/permissionList'),
+        name: 'permission',
+        meta: {  icon: 'icon', noCache: true },
+        
+      },  {
+        path: 'permission-category',
+        component: () => import('@/views/admin/permissionCategoryList'),
+        name: 'permission-category',
+        meta: { title:'权限分类', icon: 'icon', noCache: true },
+        
       }
     ]
   },

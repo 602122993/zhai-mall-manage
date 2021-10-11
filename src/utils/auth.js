@@ -1,4 +1,7 @@
 import Cookies from 'js-cookie'
+import router from '@/router'
+
+import store from '@/store'
 
 const TokenKey = 'Admin-Token'
 
@@ -12,4 +15,15 @@ export function setToken(token) {
 
 export function removeToken() {
   return Cookies.remove(TokenKey)
+}
+
+
+export async function  resetMenu(){
+  const menuList = await store.dispatch('user/getMenu')
+      
+  // generate accessible routes map based on roles
+  const accessRoutes = await store.dispatch('permission/generateRoutes', menuList)
+  console.log(router)
+  router.addRoutes(accessRoutes)
+  
 }

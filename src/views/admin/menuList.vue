@@ -111,8 +111,8 @@
             <el-input class="form-input" v-model="menuForm.sort"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')"
-              >立即创建</el-button
+        <el-button type="primary" @click="submitForm('form')"
+              >{{menuForm.id?'立即修改':'立即创建'}}</el-button
             >
             <el-button @click="dialogFormVisible = false">取消</el-button>
           </el-form-item>
@@ -133,8 +133,9 @@
 </template>
 
 <script>
-import { queryMenuList, queryRootMenu, saveMenu, updateMenu } from "@/api/menu";
+import { queryMenuList, queryRootMenu, saveMenu, updateMenu ,removeMenu} from "@/api/menu";
 import { initIcons } from "@/views/icons/element-icons";
+import {resetMenu} from '@/utils/auth'
 export default {
   data() {
     return {
@@ -172,6 +173,15 @@ export default {
       });
       this.icons = initIcons();
     },
+    handlerConfirm(id){
+        removeMenu(id).then(resp=>{
+            this.$message({
+                message:'删除成功',
+                type:'success'
+            })
+            this.initTable()
+        })
+    },
     update(row) {
       this.menuForm = row;
       this.dialogFormVisible = true;
@@ -208,7 +218,7 @@ export default {
               this.initTable();
             });
           }
-          this.reloadMenu()
+          resetMenu()
         }
       });
     },
@@ -218,14 +228,6 @@ export default {
     changePage(page) {
         this.current =page;
         this.initTable()
-    },
-    async reloadMenu() {
-      const { menuList } = await this.$store.dispatch("user/getInfo");
-      // generate accessible routes map based on roles
-      const accessRoutes = await this.$store.dispatch(
-        "permission/generateRoutes",
-        menuList
-      );
     },
   },
   mounted() {

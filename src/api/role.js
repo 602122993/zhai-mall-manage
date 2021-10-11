@@ -92,3 +92,10 @@ export function saveRoleMenu(data){
     data
   })
 }
+
+export function queryAllRoleList(){
+  return request({
+      url:`/auth/role/query-all-role-list`,
+      method:'get',
+  })
+}
