@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div>
+      <el-button class="add-button" @click="showCreate" type="primary">
+        新增
+      </el-button>
+    </div>
     <div class="table">
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column align="center" prop="id" label="编号">
@@ -27,7 +32,7 @@
         <el-table-column align="center" label="设置" width="250px">
           <template slot-scope="scope">
             <el-row>
-              <el-button @click="nextPage(scope.row.id)"> 查看下级 </el-button>
+              <el-button @click="nextPage(scope.row.id)" :disabled="scope.row.level!=1"> 查看下级 </el-button>
               <el-button> 转移商品 </el-button>
             </el-row>
           </template>
@@ -81,16 +86,24 @@ export default {
     nextPage(id) {
       this.$router.push("?id=" + id);
     },
+    showCreate(){
+      this.$router.push('./category/form')
+    },
     getProducrCategryList() {
+      this.queryForm.id = this.$route.query.id ? this.$route.query.id : 0;
       getProductCategory(this.queryForm).then((response) => {
         this.dataTotal = response.data.total;
         this.tableData = response.data.records;
-        console.log(this.dataTotal);
       });
     },
   },
   mounted() {
     this.getProducrCategryList();
+  },
+  watch: {
+    $route(to, from) {
+      this.getProducrCategryList();
+    },
   },
 };
 </script>
@@ -105,5 +118,11 @@ export default {
   text-align: center;
   padding-right: 5px;
   padding-left: 6px;
+}
+.add-button {
+  float: right;
+  margin-top: 20px;
+  margin-right: 50px;
+  margin-bottom: 20px;
 }
 </style>

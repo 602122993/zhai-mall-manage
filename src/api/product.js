@@ -15,3 +15,18 @@ export function getProductCategory(query) {
       params:query
     })
 }
+
+export function queryParentProductCategory(){
+  return request({
+    url:'/product/category/parent-list',
+    method:'get',
+  })
+}
+
+export function queryProductCategoryById(id){
+  return request({
+    url:'/product/category/query-by-id',
+    method:'get',
+    params:{id}
+  })
+}

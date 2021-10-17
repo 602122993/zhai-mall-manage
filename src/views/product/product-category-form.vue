@@ -12,10 +12,14 @@
       <el-form-item label="上级目录" prop="parentId">
         <el-select
           v-model="productCategory.parentId"
-          placeholder="请选择活动区域"
+          placeholder="请选择上级目录"
         >
-          <el-option label="无上级分类" value="0"></el-option>
-          <el-option label="区域二" value="1"></el-option>
+          <el-option
+            v-for="item in parentList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="数量单位" required>
@@ -25,20 +29,16 @@
         <el-input v-model="productCategory.sort"></el-input>
       </el-form-item>
       <el-form-item label="是否显示" prop="showStatus">
-        <el-radio v-model="productCategory.showStatus" label="true"
-          >展示</el-radio
-        >
-        <el-radio v-model="productCategory.showStatus" label="false"
-          >不展示</el-radio
-        >
+       <el-radio-group v-model="productCategory.showStatus">
+          <el-radio :label="true">展示</el-radio>
+          <el-radio :label="false">不展示</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="是否显示在导航栏" prop="navStatus">
-        <el-radio v-model="productCategory.navStatus" label="true"
-          >展示</el-radio
-        >
-        <el-radio v-model="productCategory.navStatus" label="false"
-          >不展示</el-radio
-        >
+        <el-radio-group v-model="productCategory.navStatus">
+          <el-radio :label="true">展示</el-radio>
+          <el-radio :label="false">不展示</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="分类图标" prop="icon">
         <el-input v-model="productCategory.icon"></el-input>
@@ -66,24 +66,44 @@
 </template>
 
 <script>
-import {saveProductCategory} from '@/api/product'
+import {
+  saveProductCategory,
+  queryParentProductCategory,
+  queryProductCategoryById,
+} from "@/api/product";
 export default {
   data() {
     return {
       productCategory: {},
+      parentList: [],
       rules: {
         name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
       },
     };
   },
   methods: {
-      submitForm(){
-          saveProductCategory(this.productCategory)
-          .then(response=>{
-            this.$router.push('/product/category')
-          })
-
+    submitForm() {
+      saveProductCategory(this.productCategory).then((response) => {
+        this.$router.push("/product/category");
+      });
+    },
+    initData() {
+      let id = this.$route.query.id;
+      if (id) {
+        queryProductCategoryById(id).then((resp) => {
+          this.productCategory = resp.data;
+        });
       }
+    },
+    initParentList() {
+      queryParentProductCategory().then((resp) => {
+        this.parentList = resp.data;
+      });
+    },
+  },
+  mounted() {
+    this.initParentList();
+    this.initData();
   },
 };
 </script>
