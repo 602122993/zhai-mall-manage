@@ -16,6 +16,14 @@ export function updateProductCategory(data){
   })
 }
 
+export function removeProductCategory(id){
+ return request({
+    url:'/product/category/remove',
+    method:'post',
+    params:{id}
+  })
+}
+
 export function getProductCategory(query) {
     return request({
       url: '/product/category/list',

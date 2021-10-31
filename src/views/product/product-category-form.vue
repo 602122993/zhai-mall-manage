@@ -9,20 +9,6 @@
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="productCategory.name"></el-input>
       </el-form-item>
-      <el-form-item v-show="productCategory.level!=0" label="上级目录" prop="parentId">
-        <el-select
-          v-model="productCategory.parentId"
-          placeholder="请选择上级目录"
-        >
-          <el-option label="无上级目录" :key="0" :value="0"> </el-option>
-          <el-option
-            v-for="item in parentList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="数量单位" required>
         <el-input v-model="productCategory.productUnit"></el-input>
       </el-form-item>
@@ -86,11 +72,13 @@ export default {
   methods: {
     submitForm() {
       if (this.productCategory.id) {
-       updateProductCategory(this.productCategory).then(resp=>{
-         this.$router.back(-1)
-       })
-      }else{
-         saveProductCategory(this.productCategory).then((response) => {
+        updateProductCategory(this.productCategory).then((resp) => {
+          this.$router.back(-1);
+        });
+      } else {
+        this.productCategory.parentId = this.$route.query.parentId;
+        this.productCategory.level = this.$route.query.level?this.$route.query.level:0
+        saveProductCategory(this.productCategory).then((response) => {
           this.$router.push("/product/category");
         });
       }

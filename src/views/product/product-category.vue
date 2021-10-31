@@ -37,7 +37,7 @@
             <el-row>
               <el-button
                 @click="nextPage(scope.row.id)"
-                :disabled="scope.row.level != 0"
+                :disabled="scope.row.level == 2"
               >
                 查看下级
               </el-button>
@@ -51,7 +51,13 @@
               <el-button class="check-button" @click="update(scope.row.id)">
                 编辑
               </el-button>
-              <el-button class="check-button" type="danger"> 删除 </el-button>
+              <el-button
+                class="check-button"
+                type="danger"
+                @click="remove(scope.row.id)"
+              >
+                删除
+              </el-button>
             </el-row>
           </template>
         </el-table-column>
@@ -83,7 +89,12 @@
 <script>
 import Draggable from "@/components/Draggable/index.vue";
 import UploadExcel from "@/components/UploadExcel/index.vue";
-import { getProductCategory, updateProductCategorySort } from "@/api/product";
+import {
+  getProductCategory,
+  updateProductCategorySort,
+  removeProductCategory,
+} from "@/api/product";
+import { removePermissionCategory } from "@/api/permission";
 export default {
   components: { Draggable, UploadExcel },
   data() {
@@ -99,15 +110,25 @@ export default {
   },
   methods: {
     nextPage(id) {
-      this.$router.push("?id=" + id);
+      let level = this.$route.query.level
+        ? parseInt(this.$route.query.level)
+        : 0;
+      level += 1;
+      this.$router.push("?id=" + id + "&level=" + level);
     },
     showCreate() {
-      this.$router.push("./category/form");
+      let parentId = this.$route.query.id;
+      let level = this.$route.query.level
+        ? parseInt(this.$route.query.level)
+        : 0;
+      this.$router.push(
+        "./category/form?parentId=" + parentId + "&level=" + level
+      );
     },
     resortProductCategory(value) {
       updateProductCategorySort(value).then((resp) => {
         this.sortDialogVisible = false;
-        this.getProducrCategryList()
+        this.getProducrCategryList();
         this.$message({
           type: "success",
           message: "修改成功",
@@ -123,6 +144,15 @@ export default {
     },
     update(id) {
       this.$router.push("./category/form?id=" + id);
+    },
+    remove(id) {
+      removeProductCategory(id).then((resp) => {
+        this.getProducrCategryList();
+        this.$message({
+          message: "删除成功",
+          type: "success",
+        });
+      });
     },
     showUpdateSort() {
       this.sortDialogVisible = true;

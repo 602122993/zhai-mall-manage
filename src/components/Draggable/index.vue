@@ -47,6 +47,9 @@ export default {
     disable(newVal, oldVal) {
       this.dialogVisable = newVal;
     },
+    dataList(newVal,oldVal){
+        this.tableData = newVal
+    }
   },
 };
 </script>
