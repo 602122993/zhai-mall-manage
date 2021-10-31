@@ -9,11 +9,12 @@
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="productCategory.name"></el-input>
       </el-form-item>
-      <el-form-item label="上级目录" prop="parentId">
+      <el-form-item v-show="productCategory.level!=0" label="上级目录" prop="parentId">
         <el-select
           v-model="productCategory.parentId"
           placeholder="请选择上级目录"
         >
+          <el-option label="无上级目录" :key="0" :value="0"> </el-option>
           <el-option
             v-for="item in parentList"
             :key="item.id"
@@ -29,7 +30,7 @@
         <el-input v-model="productCategory.sort"></el-input>
       </el-form-item>
       <el-form-item label="是否显示" prop="showStatus">
-       <el-radio-group v-model="productCategory.showStatus">
+        <el-radio-group v-model="productCategory.showStatus">
           <el-radio :label="true">展示</el-radio>
           <el-radio :label="false">不展示</el-radio>
         </el-radio-group>
@@ -68,6 +69,7 @@
 <script>
 import {
   saveProductCategory,
+  updateProductCategory,
   queryParentProductCategory,
   queryProductCategoryById,
 } from "@/api/product";
@@ -83,9 +85,15 @@ export default {
   },
   methods: {
     submitForm() {
-      saveProductCategory(this.productCategory).then((response) => {
-        this.$router.push("/product/category");
-      });
+      if (this.productCategory.id) {
+       updateProductCategory(this.productCategory).then(resp=>{
+         this.$router.back(-1)
+       })
+      }else{
+         saveProductCategory(this.productCategory).then((response) => {
+          this.$router.push("/product/category");
+        });
+      }
     },
     initData() {
       let id = this.$route.query.id;

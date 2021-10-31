@@ -4,6 +4,9 @@
       <el-button class="add-button" @click="showCreate" type="primary">
         新增
       </el-button>
+      <el-button class="add-button" @click="showUpdateSort" type="primary">
+        修改排序
+      </el-button>
     </div>
     <div class="table">
       <el-table :data="tableData" border style="width: 100%">
@@ -11,7 +14,7 @@
         </el-table-column>
         <el-table-column align="center" prop="name" label="分配名称">
         </el-table-column>
-        <el-table-column align="center" prop="level" label="级别">
+        <el-table-column align="center" prop="levelStr" label="级别">
         </el-table-column>
         <el-table-column align="center" prop="productCount" label="商品数量">
         </el-table-column>
@@ -32,16 +35,25 @@
         <el-table-column align="center" label="设置" width="250px">
           <template slot-scope="scope">
             <el-row>
-              <el-button @click="nextPage(scope.row.id)" :disabled="scope.row.level!=1"> 查看下级 </el-button>
-              <el-button> 转移商品 </el-button>
+              <el-button
+                @click="nextPage(scope.row.id)"
+                :disabled="scope.row.level != 0"
+              >
+                查看下级
+              </el-button>
+              <!-- <el-button> 转移商品 </el-button> -->
             </el-row>
           </template>
         </el-table-column>
         <el-table-column align="center" width="200px" label="操作">
-          <el-row>
-            <el-button class="check-button"> 编辑 </el-button>
-            <el-button class="check-button" type="danger"> 删除 </el-button>
-          </el-row>
+          <template slot-scope="scope">
+            <el-row>
+              <el-button class="check-button" @click="update(scope.row.id)">
+                编辑
+              </el-button>
+              <el-button class="check-button" type="danger"> 删除 </el-button>
+            </el-row>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -55,30 +67,33 @@
       >
       </el-pagination>
     </div>
+    <div>
+      <el-dialog title="调整顺序" :visible.sync="sortDialogVisible">
+        <draggable
+          :defaultCase="(queryForm.current - 1) * queryForm.limit"
+          :disable="sortDialogVisible"
+          :dataList="tableData"
+          @confirm="resortProductCategory"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { getProductCategory } from "@/api/product";
+import Draggable from "@/components/Draggable/index.vue";
+import UploadExcel from "@/components/UploadExcel/index.vue";
+import { getProductCategory, updateProductCategorySort } from "@/api/product";
 export default {
+  components: { Draggable, UploadExcel },
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          name: "商品名称",
-          level: 1,
-          productCount: 1,
-          productUnit: "元",
-          navStatus: true,
-          showStatus: true,
-          sort: 1,
-        },
-      ],
+      tableData: [],
       queryForm: {
         current: 1,
         limit: 10,
       },
+      sortDialogVisible: false,
       dataTotal: 20,
     };
   },
@@ -86,8 +101,18 @@ export default {
     nextPage(id) {
       this.$router.push("?id=" + id);
     },
-    showCreate(){
-      this.$router.push('./category/form')
+    showCreate() {
+      this.$router.push("./category/form");
+    },
+    resortProductCategory(value) {
+      updateProductCategorySort(value).then((resp) => {
+        this.sortDialogVisible = false;
+        this.getProducrCategryList()
+        this.$message({
+          type: "success",
+          message: "修改成功",
+        });
+      });
     },
     getProducrCategryList() {
       this.queryForm.id = this.$route.query.id ? this.$route.query.id : 0;
@@ -95,6 +120,12 @@ export default {
         this.dataTotal = response.data.total;
         this.tableData = response.data.records;
       });
+    },
+    update(id) {
+      this.$router.push("./category/form?id=" + id);
+    },
+    showUpdateSort() {
+      this.sortDialogVisible = true;
     },
   },
   mounted() {

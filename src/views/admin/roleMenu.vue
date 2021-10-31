@@ -19,11 +19,7 @@
 </template>
 
 <script>
-import {
-  queryMenuTree,
-  queryMenuIdByRoleId,
-  saveRoleMenu,
-} from "@/api/role";
+import { queryMenuTree, queryMenuIdByRoleId, saveRoleMenu } from "@/api/role";
 export default {
   data() {
     return {
@@ -40,14 +36,18 @@ export default {
       queryMenuTree().then((resp) => {
         const { data } = resp;
         this.menuTree = data;
+        queryMenuIdByRoleId(this.$route.query.roleId).then((resp) => {
+          this.menuIdList = resp.data.filter((item) => {
+            return (
+              this.menuTree.map((menuId) => menuId.id).indexOf(item) === -1
+            );
+          });
+        });
       });
-      queryMenuIdByRoleId(this.$route.query.roleId).then(resp=>{
-         this.menuIdList=resp.data
-      })
     },
     submitRoleMenu() {
       let menuIdList = this.$refs.tree
-        .getCheckedNodes(true, false)
+        .getCheckedNodes(false, true)
         .map((item) => {
           return item.id;
         });
@@ -58,12 +58,12 @@ export default {
           message: "保存成功",
           type: "success",
         });
-        this.$router.push('./role')
+        this.$router.push("./role");
       });
     },
-    cancel(){
-        this.$router.push('./role')
-    }
+    cancel() {
+      this.$router.push("./role");
+    },
   },
   mounted() {
     this.initTree();

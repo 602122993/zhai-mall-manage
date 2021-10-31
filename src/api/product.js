@@ -8,6 +8,14 @@ export function saveProductCategory(data) {
     })
 }
 
+export function updateProductCategory(data){
+  return request({
+    url:'/product/category/update',
+    method:'post',
+    data
+  })
+}
+
 export function getProductCategory(query) {
     return request({
       url: '/product/category/list',
@@ -28,5 +36,13 @@ export function queryProductCategoryById(id){
     url:'/product/category/query-by-id',
     method:'get',
     params:{id}
+  })
+}
+
+export function updateProductCategorySort(data){
+  return request({
+    url:'/product/category/update-product-category-sort',
+    method:'post',
+    data
   })
 }
